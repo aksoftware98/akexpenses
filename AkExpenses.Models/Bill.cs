@@ -19,6 +19,9 @@ namespace AkExpenses.Models
         [StringLength(256)]
         public string Provider { get; set; }
 
+        [StringLength(256)]
+        public string Attachment { get; set; }
+
         public DateTime BillDate { get; set; }
 
         public DateTime CreatedDate { get; set; }
