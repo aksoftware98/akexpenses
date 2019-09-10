@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AkExpenses.Models", "AkExpe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AkExpenses.Api", "AkExpenses.Api\AkExpenses.Api.csproj", "{E1DD379B-94C7-4FBB-84C0-1701DBE8C3E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkExpenses.Api.Tests", "AkExpenses.Api.Tests\AkExpenses.Api.Tests.csproj", "{58FF8F07-9150-4C07-A9A6-472A0F72686A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{E1DD379B-94C7-4FBB-84C0-1701DBE8C3E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1DD379B-94C7-4FBB-84C0-1701DBE8C3E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1DD379B-94C7-4FBB-84C0-1701DBE8C3E0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58FF8F07-9150-4C07-A9A6-472A0F72686A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58FF8F07-9150-4C07-A9A6-472A0F72686A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58FF8F07-9150-4C07-A9A6-472A0F72686A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58FF8F07-9150-4C07-A9A6-472A0F72686A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
