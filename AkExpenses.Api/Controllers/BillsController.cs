@@ -25,9 +25,10 @@ namespace AkExpenses.Api.Controllers
             if (string.IsNullOrEmpty(search))
                 search = "";
             if (!page.HasValue)
-                page = 0; 
+                page = 0;
 
-            var result = _db.Bills.Where(b => b.Number.Contains(search)).OrderByDescending(b => b.BillDate).ThenByDescending(b => b.CreatedDate).Skip()
+            //var result = _db.Bills.Where(b => b.Number.Contains(search)).OrderByDescending(b => b.BillDate).ThenByDescending(b => b.CreatedDate).Skip();
+            
             return View();
         }
     }

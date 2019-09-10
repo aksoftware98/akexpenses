@@ -34,5 +34,5 @@ namespace AkExpenses.Models.Shared
         public int PageSize { get; set; }
         public int TotalPages { get; set; }
 
-
+    }
 }
