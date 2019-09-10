@@ -199,7 +199,7 @@ namespace AkExpenses.Api.Controllers
 
         #region Delete
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             //Validate the id

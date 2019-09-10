@@ -177,7 +177,7 @@ namespace AkExpenses.Api.Controllers
         #region Delete
 
         //Deletes a specific provider
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
