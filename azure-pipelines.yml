@@ -3,7 +3,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  wwwrootDir: 'Tailspin.SpaceGame.Web/wwwroot'
+  wwwrootDir: 'AkExpenses.Api/'
   dotnetSdkVersion: '2.2.401'
 
 steps:
