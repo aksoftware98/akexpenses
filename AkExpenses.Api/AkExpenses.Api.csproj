@@ -25,4 +25,8 @@
     <ProjectReference Include="..\AkExpenses.Models\AkExpenses.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Uploads\" />
+  </ItemGroup>
+
 </Project>

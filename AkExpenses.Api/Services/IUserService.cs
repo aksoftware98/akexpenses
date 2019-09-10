@@ -66,6 +66,7 @@ namespace AkExpenses.Api.Services
                     issuer: "http://ahmadmozaffar.net",
                     audience: "http://ahmadmozaffar.net",
                     expires: DateTime.Now.AddDays(30),
+                    claims: claims,
                     signingCredentials: new SigningCredentials(signInKey, SecurityAlgorithms.HmacSha256Signature));
 
                 return new UserManageResponse
