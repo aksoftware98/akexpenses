@@ -27,6 +27,7 @@ namespace AkExpenses.Api.Data
         public DbSet<DebtPayment> DebtPayment { get; set; }
         public DbSet<MoneyType> MoneyTypes { get; set; }
 
+        public DbSet<Debt> Debts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Income>()
