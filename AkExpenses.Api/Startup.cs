@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AkExpenses.Api.Data;
 using AkExpenses.Api.Models;
+using AkExpenses.Api.Services;
 using MassTransit.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -79,6 +80,10 @@ namespace AkExpenses.Api
                         RequireExpirationTime = true,
                     };
                 });
+
+            services.AddScoped<IUserService, UserService>(); 
+            services.AddScoped<IMailService, MailService>(); 
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
