@@ -1,42 +1,22 @@
 pool:
   vmImage: 'windows-latest'
 
-variables:
-  buildConfiguration: 'Release'
-  wwwrootDir: 'AkExpenses.Api/'
-  dotnetSdkVersion: '2.2.401'
-
 steps:
-- task: DotNetCoreInstaller@0
-  displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
-  inputs:
-    version: '$(dotnetSdkVersion)'
-
-- script: 'echo "$(Build.DefinitionName), $(Build.BuildId), $(Build.BuildNumber)" > buildinfo.txt'
-  displayName: 'Write build info'
-  workingDirectory: $(wwwrootDir)
-
 - task: DotNetCoreCLI@2
-  displayName: 'Restore project dependencies'
   inputs:
     command: 'restore'
-    projects: '**/*.csproj'
-
+    projects: 'AkExpenses.Api, AkExpenses.Models'
+    feedsToUse: 'select'
+    vstsFeed: 'cd11d6d0-f336-4066-8b53-63b324f51660'
 - task: DotNetCoreCLI@2
-  displayName: 'Build the project - $(buildConfiguration)'
   inputs:
     command: 'build'
-    arguments: '--no-restore --configuration $(buildConfiguration)'
-    projects: '**/*.csproj'
+    projects: 'AkExpenses.Api, AkExpenses.Models'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Publish the project - $(buildConfiguration)'
   inputs:
     command: 'publish'
-    projects: '**/*.csproj'
-    publishWebProjects: false
-    arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
-    zipAfterPublish: true
+    publishWebProjects: true
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
