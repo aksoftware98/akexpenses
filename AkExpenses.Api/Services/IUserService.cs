@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using v = AKSoftware.Text; 
 namespace AkExpenses.Api.Services
 {
     public interface IUserService
