@@ -10,11 +10,13 @@ using AkExpenses.Models.Shared.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.IO; 
+using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AkExpenses.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class BillsController : ControllerBase
     {
@@ -106,7 +108,7 @@ namespace AkExpenses.Api.Controllers
 
         // POST: api/bills
         [HttpPost]
-        public async Task<IActionResult> Post([FromForm]BillViewModel model)
+        public async Task<IActionResult> Post(BillViewModel model)
         {
             if (ModelState.IsValid)
             {
