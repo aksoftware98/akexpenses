@@ -21,7 +21,7 @@ namespace AkExpenses.Api.Controllers
     public class BillsController : ControllerBase
     {
         const int PAGE_SIZE = 10;
-
+        
         private readonly ApplicationDbContext _db;
 
         public BillsController(ApplicationDbContext db)
@@ -89,7 +89,7 @@ namespace AkExpenses.Api.Controllers
         public async Task<IActionResult> Get(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-                return NotFound();
+                return this.FixedBadRequest("Id sent is invalid.");
 
             var bill = await _db.Bills.FindAsync(id);
             if (bill == null)
@@ -114,9 +114,6 @@ namespace AkExpenses.Api.Controllers
             {
                 var account = await getAccount();
 
-                // Check if there is a file 
-
-
                 var bill = await _db.AddAsync(new Bill
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -138,11 +135,7 @@ namespace AkExpenses.Api.Controllers
 
             }
 
-            return BadRequest(new HttpSingleResponse<object>
-            {
-                IsSuccess = false,
-                Message = "Some fields are not valid",
-            });
+            return this.FixedBadRequest("Some fields are not valid.");
         }
 
         // POST: api/bills
@@ -159,7 +152,7 @@ namespace AkExpenses.Api.Controllers
 
             if (file == null || file.FileName == "")
             {
-                return BadRequest();
+                return this.FixedBadRequest("No File has been choosen.");
             }
 
 
@@ -168,11 +161,7 @@ namespace AkExpenses.Api.Controllers
             // check the extension 
             var allowedExtensions = DataHelper.AllowedDocumentsExtensions();
             if (!allowedExtensions.Contains(extension))
-                return BadRequest(new
-                {
-                    Message = "The uploaded file is not supported",
-                    IsSuccess = false,
-                });
+                return this.FixedBadRequest("The uploaded file is not supported.");
 
             string directoryPath = Directory.GetCurrentDirectory() + "/wwwroot/";
 
@@ -210,7 +199,7 @@ namespace AkExpenses.Api.Controllers
             if(ModelState.IsValid)
             {
                 if (string.IsNullOrWhiteSpace(model.Id))
-                    return NotFound();
+                    return this.FixedBadRequest("Id sent is not valid.");
 
                 var bill = await _db.Bills.FindAsync(model.Id);
                 if (bill == null)
@@ -231,12 +220,7 @@ namespace AkExpenses.Api.Controllers
                 });
             }
 
-            // Invalid object
-            return BadRequest(new
-            {
-                Message = "Some propreties are not valid",
-                IsSuccess = false
-            });
+            return this.FixedBadRequest("Some propreties are not valid");
         }
 
         #endregion
@@ -247,7 +231,7 @@ namespace AkExpenses.Api.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-                return NotFound();
+                return this.FixedBadRequest("Id sent is not valid.");
 
             var bill = await _db.Bills.FindAsync(id);
             if (bill == null)

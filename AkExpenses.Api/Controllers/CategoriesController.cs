@@ -8,6 +8,7 @@ using AkExpenses.Api.Utitlity;
 using AkExpenses.Models;
 using AkExpenses.Models.Shared;
 using AkExpenses.Models.Shared.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,7 @@ namespace AkExpenses.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoriesController : ControllerBase
     {
         const string iconPath = "Uploads/category.png";
@@ -38,6 +40,7 @@ namespace AkExpenses.Api.Controllers
         #endregion
 
         #region GET
+
         // Get all the categories of a specific user 
         // api/categories?query=&page=1
         [HttpGet]
@@ -86,6 +89,7 @@ namespace AkExpenses.Api.Controllers
                 Value = category,
             });
         }
+
         #endregion
 
         #region Create
@@ -103,11 +107,7 @@ namespace AkExpenses.Api.Controllers
 
                 if (oldCategory != null)
                 {
-                    return BadRequest(new HttpSingleResponse<object>
-                    {
-                        IsSuccess = false,
-                        Message = $"Category with name: {oldCategory.Name} already exists."
-                    });
+                    return this.FixedBadRequest($"Category with name: {oldCategory.Name} already exists.");
                 }
 
                 var category = await _db.AddAsync(new Category
@@ -128,12 +128,7 @@ namespace AkExpenses.Api.Controllers
                 });
 
             }
-
-            return BadRequest(new HttpSingleResponse<object>
-            {
-                IsSuccess = false,
-                Message = "Some fields are not valid",
-            });
+            return this.FixedBadRequest("Some fields are not valid.");
         }
 
         // POST: api/categories
@@ -158,11 +153,7 @@ namespace AkExpenses.Api.Controllers
             // check the extension 
             var allowedExtensions = DataHelper.AllowedDocumentsExtensions();
             if (!allowedExtensions.Contains(extension))
-                return BadRequest(new
-                {
-                    Message = "The uploaded file is not supported",
-                    IsSuccess = false,
-                });
+                return this.FixedBadRequest("The uploaded file is not supported.");
 
             string directoryPath = Directory.GetCurrentDirectory() + "/wwwroot/";
 
@@ -190,9 +181,11 @@ namespace AkExpenses.Api.Controllers
             });
 
         }
+
         #endregion
 
         #region Edit
+
         // PUT api/categories
         [HttpPut]
         public async Task<IActionResult> Put(CategoryViewModel model)
@@ -211,11 +204,7 @@ namespace AkExpenses.Api.Controllers
 
                 if (oldCategory != null)
                 {
-                    return BadRequest(new HttpSingleResponse<object>
-                    {
-                        IsSuccess = false,
-                        Message = $"There is already a category with the name: {oldCategory.Name}."
-                    });
+                    return this.FixedBadRequest($"There is already a category with the name: {oldCategory.Name}.");
                 }
 
                 category.Name = model.Name;
@@ -231,12 +220,7 @@ namespace AkExpenses.Api.Controllers
                 });
             }
 
-            // Invalid object
-            return BadRequest(new
-            {
-                Message = "Some propreties are not valid",
-                IsSuccess = false
-            });
+            return this.FixedBadRequest("Some propreties are not valid");
         }
 
         #endregion
@@ -271,6 +255,7 @@ namespace AkExpenses.Api.Controllers
                 Message = "Category deleted"
             });
         }
+
         #endregion 
     }
 }

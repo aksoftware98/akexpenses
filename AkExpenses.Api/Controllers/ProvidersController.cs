@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AkExpenses.Api.Data;
+using AkExpenses.Api.Utitlity;
 using AkExpenses.Models;
 using AkExpenses.Models.Shared;
 using AkExpenses.Models.Shared.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +15,7 @@ namespace AkExpenses.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProvidersController : ControllerBase
     {
         private readonly ApplicationDbContext db;
@@ -31,7 +34,7 @@ namespace AkExpenses.Api.Controllers
             //Get the account
             var account = await getAccount();
 
-            var providers = db.Providers.Where(p => p.AccountId == account.Id);
+            var providers = db.Providers.Where(p => p.AccountId == account.Id).OrderByDescending(p => p.Name);
 
             return Ok(new HttpCollectionResponse<object>
             {
@@ -54,11 +57,7 @@ namespace AkExpenses.Api.Controllers
         {
             if (string.IsNullOrWhiteSpace(id))
             {
-                return BadRequest(new HttpSingleResponse<object>
-                {
-                    IsSuccess = false,
-                    Message = "Sent id is invalid."
-                });
+                return NotFound();
             }
 
             //Get the provider
@@ -94,11 +93,7 @@ namespace AkExpenses.Api.Controllers
 
                 if (oldProvider != null)
                 {
-                    return BadRequest(new HttpSingleResponse<object>
-                    {
-                        IsSuccess = false,
-                        Message = $"Provider with name {oldProvider.Name} already exists."
-                    });
+                    return this.FixedBadRequest($"Provider with name {oldProvider.Name} already exists.");
                 }
 
                 var newProvider = new Provider
@@ -119,11 +114,7 @@ namespace AkExpenses.Api.Controllers
                 });
             }
 
-            return BadRequest(new HttpSingleResponse<object>
-            {
-                IsSuccess = false,
-                Message = "Sent model has some error."
-            });
+            return this.FixedBadRequest("Sent model has some error.");
         }
 
         #endregion
@@ -148,11 +139,7 @@ namespace AkExpenses.Api.Controllers
 
                 if (oldProvider != null)
                 {
-                    return BadRequest(new HttpSingleResponse<object>
-                    {
-                        IsSuccess = false,
-                        Message = $"Provider with name: {oldProvider.Name} already exists."
-                    });
+                    return this.FixedBadRequest($"Provider with name: {oldProvider.Name} already exists.");
                 }
 
                 provider.Name = model.Name.Trim();
@@ -165,11 +152,7 @@ namespace AkExpenses.Api.Controllers
                 });
             }
 
-            return BadRequest(new HttpSingleResponse<object>
-            {
-                IsSuccess = false,
-                Message = "Model sent has some errors."
-            });
+            return this.FixedBadRequest("Model sent has some errors.");
         }
 
         #endregion
@@ -182,11 +165,7 @@ namespace AkExpenses.Api.Controllers
         {
             if (string.IsNullOrWhiteSpace(id))
             {
-                return BadRequest(new HttpSingleResponse<object>
-                {
-                    IsSuccess = false,
-                    Message = "Sent id is invalid."
-                });
+                return NotFound();
             }
 
             var provider = await db.Providers.FindAsync(id);
@@ -199,10 +178,11 @@ namespace AkExpenses.Api.Controllers
             db.Providers.Remove(provider);
             await db.SaveChangesAsync();
 
-            return Ok(new HttpSingleResponse<object>
+            return Ok(new HttpSingleResponse<Provider>
             {
                 IsSuccess = true,
-                Message = "Provider has been deleted successfully."
+                Message = "Provider has been deleted successfully.",
+                Value = provider
             });
         }
 

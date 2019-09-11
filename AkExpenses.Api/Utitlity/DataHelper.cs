@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace AkExpenses.Api.Utitlity
             if (remaining == 0)
                 return totalItems / pageSize;
 
-            return (totalItems / (pageSize - remaining)) + 1;
+            return (totalItems / pageSize) + 1;
         }
 
         /// <summary>
@@ -55,7 +56,6 @@ namespace AkExpenses.Api.Utitlity
                 ".pdf"
             };
         }
-
 
     }
 }

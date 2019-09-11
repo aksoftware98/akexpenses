@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AkExpenses.Api.Data;
+using AkExpenses.Api.Utitlity;
 using AkExpenses.Models;
 using AkExpenses.Models.Shared;
 using AkExpenses.Models.Shared.ViewModels;
@@ -12,9 +13,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AkExpenses.Api.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MoneyTypesController : ControllerBase
     {
         private readonly ApplicationDbContext db;
@@ -63,18 +64,13 @@ namespace AkExpenses.Api.Controllers
         /// </summary>
         /// <param name="id">Id of the money type to get</param>
         /// <returns></returns>
-        [Route("{id}")]
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
             //Validate the id
             if (string.IsNullOrWhiteSpace(id))
             {
-                return BadRequest(new HttpSingleResponse<object>
-                {
-                    IsSuccess = false,
-                    Message = "Id sent can't be empty."
-                });
+                return NotFound();
             }
 
             //Get the account
@@ -97,7 +93,6 @@ namespace AkExpenses.Api.Controllers
 
         #region Post
 
-        [Route("Post")]
         [HttpPost]
         public async Task<IActionResult> Post(MoneyTypeViewModel model)
         {
@@ -110,11 +105,7 @@ namespace AkExpenses.Api.Controllers
 
                 if (oldType != null)
                 {
-                    return BadRequest(new HttpSingleResponse<object>
-                    {
-                        IsSuccess = false,
-                        Message = "Type already exists."
-                    });
+                    return this.FixedBadRequest("Type already exists.");
                 }
 
                 //Create new Money type
@@ -136,12 +127,7 @@ namespace AkExpenses.Api.Controllers
                     Value = newType
                 });
             }
-
-            return BadRequest(new HttpSingleResponse<object>
-            {
-                IsSuccess = false,
-                Message = "Model sent has some errors."
-            });
+            return this.FixedBadRequest("Model sent has some errors.");
         }
 
         #endregion
@@ -167,11 +153,7 @@ namespace AkExpenses.Api.Controllers
 
                 if (oldType != null)
                 {
-                    return BadRequest(new HttpSingleResponse<object>
-                    {
-                        IsSuccess = false,
-                        Message = $"Type already exists with the name: {oldType.Name}."
-                    });
+                    return this.FixedBadRequest($"Type already exists with the name: {oldType.Name}.");
                 }
 
                 //Edit type info
@@ -188,11 +170,7 @@ namespace AkExpenses.Api.Controllers
                 });
             }
 
-            return BadRequest(new HttpSingleResponse<object>
-            {
-                IsSuccess = false,
-                Message = "Model sent has some errors."
-            });
+            return this.FixedBadRequest("Model sent has some errors.");
         }
 
         #endregion
@@ -205,7 +183,7 @@ namespace AkExpenses.Api.Controllers
             //Validate the id
             if (string.IsNullOrEmpty(id))
             {
-                return BadRequest();
+                return NotFound();
             }
 
             //Get Money type
@@ -219,10 +197,11 @@ namespace AkExpenses.Api.Controllers
             db.MoneyTypes.Remove(type);
             await db.SaveChangesAsync();
 
-            return Ok(new HttpSingleResponse<object>
+            return Ok(new HttpSingleResponse<MoneyType>
             {
                 IsSuccess = true,
-                Message = "Money type has been deleted successfully."
+                Message = "Money type has been deleted successfully.",
+                Value = type
             });
         }
 

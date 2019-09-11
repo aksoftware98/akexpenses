@@ -17,19 +17,19 @@ namespace AkExpenses.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class OutcomesController : ControllerBase
+    public class IncomesController : ControllerBase
     {
         private const int PAGE_SIZE = 10;
         private readonly ApplicationDbContext db;
 
-        public OutcomesController(ApplicationDbContext db)
+        public IncomesController(ApplicationDbContext db)
         {
             this.db = db;
         }
 
         #region Get
 
-        //Returns all outcomes for the logged in user
+        //Gets all incomes for the logged in account
         [HttpGet]
         public async Task<IActionResult> Get(string query, int? page)
         {
@@ -45,64 +45,64 @@ namespace AkExpenses.Api.Controllers
 
             //Get the logged in account
             var account = await getAccount();
-            var totalOutcomes = db.Outcomes.Where(o => o.AccountId == account.Id).Count();
+            var totalIncomes = db.Incomes.Where(i => i.AccountId == account.Id).Count();
 
-            //Get all outcomes
-            var outcomes = db.Outcomes.Where(o => o.AccountId == account.Id)
-                .Include(o => o.MoneyType)
-                .Include(o => o.Category)
+            //Get all incomes related to that account
+            var incomes = db.Incomes.Where(i => i.AccountId == account.Id)
+                .Include(i => i.Category)
+                .Include(i => i.MoneyType)
                 .OrderByDescending(o => o.PayDate)
                 .ThenByDescending(o => o.CreatedDate)
                 .Skip(PAGE_SIZE * (page.Value - 1))
                 .Take(PAGE_SIZE);
 
-
             return Ok(new HttpCollectionResponse<object>
             {
                 IsSuccess = true,
-                Message = "Outcomes have been retrieved successfully.",
-                Count = totalOutcomes,
+                Message = "Incomes have been retrieved successfully.",
+                Count = totalIncomes,
                 Page = page.Value,
                 PageSize = PAGE_SIZE,
                 SearchQuery = query,
-                TotalPages = DataHelper.GetTotalPages(totalOutcomes, PAGE_SIZE),
-                Values = outcomes.Select(o => new
+                TotalPages = DataHelper.GetTotalPages(totalIncomes, PAGE_SIZE),
+                Values = incomes.Select(i => new
                 {
-                    o.Id,
-                    o.Title,
-                    o.Description,
-                    o.PayDate,
-                    o.MoneyTypeId,
-                    MoneyType = o.MoneyType.Name,
-                    Category = o.Category.Name,
-                    o.CategoryId,
-                    o.BillId
+                    i.Id,
+                    i.Title,
+                    i.Description,
+                    i.PayDate,
+                    i.Amount,
+                    i.MoneyTypeId,
+                    i.CategoryId,
+                    MoneyType = i.MoneyType.Name,
+                    Category = i.Category.Name,
+                    i.ProvidedId
                 })
             });
         }
 
-        //Returns a specific outcome by id
+        //Get a specific incomes by id
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
             //Validate the id
             if (string.IsNullOrWhiteSpace(id))
             {
-                return NotFound();
+                NotFound();
             }
 
-            var outcome = await db.Outcomes.FindAsync(id);
+            var income = await db.Incomes.FindAsync(id);
 
-            if (outcome == null)
+            if (income == null)
             {
                 return NotFound();
             }
 
-            return Ok(new HttpSingleResponse<Outcome>
+            return Ok(new HttpSingleResponse<Income>
             {
                 IsSuccess = true,
-                Message = "Outcome has been retrieved successfully.",
-                Value = outcome
+                Message = "Income has been retrieved successfully.",
+                Value = income
             });
         }
 
@@ -110,17 +110,14 @@ namespace AkExpenses.Api.Controllers
 
         #region Post
 
-        //Adds a new outcome to the database
+        //Adds a new income to the database
         [HttpPost]
-        public async Task<IActionResult> Post(OutcomeViewModel model)
+        public async Task<IActionResult> Post(IncomeViewModel model)
         {
             //Validate the model
             if (ModelState.IsValid)
             {
-                //Get the logged in account
-                var account = await getAccount();
-
-                //Get the money type
+                //Get money type
                 var moneyType = await db.MoneyTypes.FindAsync(model.MoneyTypeId);
 
                 if (moneyType == null)
@@ -128,7 +125,7 @@ namespace AkExpenses.Api.Controllers
                     return NotFound();
                 }
 
-                //Get the category
+                //Get category
                 var category = await db.Categories.FindAsync(model.CategoryId);
 
                 if (category == null)
@@ -136,32 +133,41 @@ namespace AkExpenses.Api.Controllers
                     return NotFound();
                 }
 
-                //Get the bill
-                var bill = await db.Bills.FindAsync(model.BillId);
+                //Get the provider
+                var provider = await db.Providers.FindAsync(model.ProviderId);
 
-                //Create new outcome
-                var newOutcome = new Outcome
+                if (provider == null)
+                {
+                    return NotFound();
+                }
+
+                //Get the logged in account
+                var account = await getAccount();
+
+                //Create the new income
+                var newIncome = new Income
                 {
                     Id = Guid.NewGuid().ToString(),
                     Title = model.Title,
                     Description = model.Description,
                     Amount = model.Amount,
                     PayDate = model.PayDate,
-                    BillId = model.BillId != null ? model.BillId : null,
+                    CreatedDate = DateTime.UtcNow,
+                    AccountId = account.Id,
                     CategoryId = model.CategoryId,
-                    MoneyTypeId = model.MoneyTypeId,
-                    AccountId = account.Id
+                    ProvidedId = model.ProviderId,
+                    MoneyTypeId = model.MoneyTypeId
                 };
 
-                //Add the new outcome to the database
-                await db.Outcomes.AddAsync(newOutcome);
+                //Add the new income to the database
+                await db.Incomes.AddAsync(newIncome);
                 await db.SaveChangesAsync();
 
-                return Ok(new HttpSingleResponse<Outcome>
+                return Ok(new HttpSingleResponse<Income>
                 {
                     IsSuccess = true,
-                    Message = "Outcome has been added successfully",
-                    Value = newOutcome
+                    Message = "Income has been added successfully.",
+                    Value = newIncome
                 });
             }
 
@@ -172,17 +178,17 @@ namespace AkExpenses.Api.Controllers
 
         #region Put
 
-        //Edits the info of a specific outcome
+        //Update the info of a particular income
         [HttpPut]
-        public async Task<IActionResult> Put(OutcomeViewModel model)
+        public async Task<IActionResult> Put(IncomeViewModel model)
         {
             //Validate the model
             if (ModelState.IsValid)
             {
-                //Get the outcome
-                var outcome = await db.Outcomes.FindAsync(model.Id);
+                //Get the income
+                var income = await db.Incomes.FindAsync(model.Id);
 
-                if (outcome == null)
+                if (income == null)
                 {
                     return NotFound();
                 }
@@ -197,68 +203,72 @@ namespace AkExpenses.Api.Controllers
 
                 //Get the category
                 var category = await db.Categories.FindAsync(model.CategoryId);
-
                 if (category == null)
                 {
                     return NotFound();
                 }
 
-                //Get the bill
-                var bill = await db.Bills.FindAsync(model.BillId);
+                //Get the provider
+                var provider = await db.Providers.FindAsync(model.ProviderId);
 
-                //Update outcome info
-                outcome.Title = model.Title;
-                outcome.Description = model.Description;
-                outcome.Amount = model.Amount;
-                outcome.PayDate = model.PayDate;
-                outcome.MoneyTypeId = model.MoneyTypeId;
-                outcome.CategoryId = model.CategoryId;
-                outcome.BillId = model.BillId;
+                if (provider == null)
+                {
+                    return NotFound();
+                }
 
-                return Ok(new HttpSingleResponse<object>
+                //Update income data
+                income.Title = model.Title;
+                income.Description = model.Description;
+                income.Amount = model.Amount;
+                income.PayDate = model.PayDate;
+                income.ProvidedId = provider.Id;
+                income.CategoryId = category.Id;
+                income.MoneyTypeId = moneyType.Id;
+
+                //Save changes to the database
+                await db.SaveChangesAsync();
+
+                return Ok(new HttpSingleResponse<Income>
                 {
                     IsSuccess = true,
-                    Message = "Outcome has been udpated successfully.",
-                    Value = outcome
+                    Message = "Income has been updated successfully.",
+                    Value = income
                 });
             }
 
-            return this.FixedBadRequest("Outcome has been edited successfully.");
+            return this.FixedBadRequest("Model sent has some errors.");
         }
 
         #endregion
 
         #region Delete
 
-        //Delete a specific outcome by id
+        //Deletes a specific income
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            //Validate the id
             if (string.IsNullOrWhiteSpace(id))
             {
-                return NotFound();
+                return this.FixedBadRequest("Id sent is invalid.");
             }
 
-            //Get the outcome
-            var outcome = await db.Outcomes.FindAsync(id);
+            //Get income
+            var income = await db.Incomes.FindAsync(id);
 
-            if (outcome == null)
+            if (income == null)
             {
                 return NotFound();
             }
 
-            //Delete the outcome
-            db.Outcomes.Remove(outcome);
+            //Delete the income
+            db.Incomes.Remove(income);
 
-            //Save
             await db.SaveChangesAsync();
 
-            return Ok(new HttpSingleResponse<Outcome>
+            return Ok(new HttpSingleResponse<object>
             {
                 IsSuccess = true,
-                Message = "Outcome has been deleted successfully.",
-                Value = outcome
+                Message = "Income has been deleted successfully."
             });
         }
 
@@ -266,7 +276,6 @@ namespace AkExpenses.Api.Controllers
 
         #region Helper Functions
 
-        //Returns the current logged in account
         private async Task<Account> getAccount()
         {
             var id = User.Claims.SingleOrDefault(c => c.Type == "AccountId").Value;
