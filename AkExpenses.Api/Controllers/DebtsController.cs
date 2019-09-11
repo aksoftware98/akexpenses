@@ -41,8 +41,8 @@ namespace AkExpenses.Api.Controllers
         #endregion
 
         #region GET
-        // Get all the bills of a specific user 
-        // api/bills?query=&page=1
+        // Get all the Debts of a specific user 
+        // api/debts?query=&page=1
         [HttpGet]
         public async Task<IActionResult> Get(string query, int? page)
         {
@@ -55,7 +55,7 @@ namespace AkExpenses.Api.Controllers
             var account = await getAccount();
             int totalCount = _db.Debts.Where(b => b.AccountId == account.Id).Count();
 
-            var bills = _db.Debts.Where(b => b.Title.Contains(query) && b.AccountId == account.Id)
+            var debts = _db.Debts.Where(b => b.Title.Contains(query) && b.AccountId == account.Id)
                             .OrderByDescending(b => b.DebtDate)
                             .ThenByDescending(b => b.CreatedDate)
                             .Skip(PAGE_SIZE * (page.Value - 1))
@@ -63,22 +63,22 @@ namespace AkExpenses.Api.Controllers
 
             return Ok(new HttpCollectionResponse<object>
             {
-                Count = bills.Count(),
+                Count = debts.Count(),
                 IsSuccess = true,
                 Message = "Debts retrieved",
                 Page = page.Value,
                 PageSize = PAGE_SIZE,
                 SearchQuery = query,
                 TotalPages = DataHelper.GetTotalPages(totalCount, PAGE_SIZE),
-                Values = bills.Select(b => new
+                Values = debts.Select(d => new
                 {
-                    b.Id,
-                    b.Title,
-                    b.CreatedDate,
-                    b.Description,
-                    b.DebtDate,
-                    b.AccountId,
-                    b.IsPaid
+                    d.Id,
+                    d.Title,
+                    d.CreatedDate,
+                    d.Description,
+                    d.DebtDate,
+                    d.AccountId,
+                    d.IsPaid
                 })
             });
         }
@@ -89,7 +89,7 @@ namespace AkExpenses.Api.Controllers
         public async Task<IActionResult> Get(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-                return NotFound();
+                return this.FixedBadRequest("Id sent is not valid.");
 
             var debt = await _db.Debts.FindAsync(id);
             if (debt == null)
@@ -141,11 +141,7 @@ namespace AkExpenses.Api.Controllers
 
             }
 
-            return BadRequest(new HttpSingleResponse<object>
-            {
-                IsSuccess = false,
-                Message = "Some fields are not valid",
-            });
+            return this.FixedBadRequest("Some fields are not valid.");
         }
 
         #endregion
@@ -158,7 +154,7 @@ namespace AkExpenses.Api.Controllers
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrWhiteSpace(model.Id))
-                    return NotFound();
+                    return this.FixedBadRequest("Id sent is not valid.");
 
                 var debt = await _db.Debts.FindAsync(model.Id);
                 if (debt == null)
@@ -180,12 +176,7 @@ namespace AkExpenses.Api.Controllers
                 });
             }
 
-            // Invalid object
-            return BadRequest(new
-            {
-                Message = "Some propreties are not valid",
-                IsSuccess = false
-            });
+            return this.FixedBadRequest("Some propreties are not valid.");
         }
 
         #endregion
@@ -196,7 +187,7 @@ namespace AkExpenses.Api.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-                return NotFound();
+                return this.FixedBadRequest("Id sent is not valid.");
 
             var debt = await _db.Debts.FindAsync(id);
             if (debt == null)

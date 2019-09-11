@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AkExpenses.Api.Models;
 using AkExpenses.Api.Services;
+using AkExpenses.Api.Utitlity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -41,14 +42,10 @@ namespace AkExpenses.Api.Controllers
                     return Ok(result);
                 }
 
-                return BadRequest();
+                return this.FixedBadRequest("An error occured in the server.");
             }
 
-            return BadRequest(new UserManageResponse
-            {
-                Message = "Please enter a valid data",
-                IsSuccess = false
-            });
+            return this.FixedBadRequest("Please enter valid data.");
         }
 
         // POST: auth/login
