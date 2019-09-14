@@ -1,5 +1,6 @@
 ﻿using AkExpenses.Api.Data;
 using AkExpenses.Api.Models;
+using AkExpenses.Models.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
