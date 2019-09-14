@@ -1,0 +1,65 @@
+﻿<Application x:Class="AkExpenses.WPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:AkExpenses.WPF"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            
+            <!-- Textbox style -->
+            <Style x:Key="textBoxStyle" TargetType="TextBox">
+                <Setter Property="Height" Value="30"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="BorderBrush" Value="Black"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="FontFamily" Value="Segoe UI Semilight"/>
+            </Style>
+
+            <!-- Label style -->
+            <Style x:Key="labelStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="FontFamily" Value="Segoe UI Semilight"/>
+            </Style>
+
+            <!-- Main Label style -->
+            <Style x:Key="mainLabelStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="35"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="FontFamily" Value="Segoe UI Light"/>
+            </Style>
+
+            <ControlTemplate x:Key="buttonTemplate" TargetType="Button">
+                <Border Name="Border" Background="{TemplateBinding Background}" CornerRadius="20" BorderBrush="Purple" TextBlock.Foreground="{TemplateBinding Foreground}">
+                    <Grid>
+                        <Rectangle Name="RectBorder" RadiusX="20" RadiusY="20" StrokeDashArray="2 2" Visibility="Hidden"
+                                   Stroke="White"/>
+
+                        <ContentPresenter RecognizesAccessKey="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsFocused" Value="True">
+                        <Setter TargetName="RectBorder" Property="Visibility" Value="Visible"/>
+                    </Trigger>
+
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter TargetName="Border" Property="Opacity" Value=".4"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <Style x:Key="messageLabelStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="Background" Value="Purple"/>
+                <Setter Property="Padding" Value="10"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

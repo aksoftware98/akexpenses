@@ -1,0 +1,39 @@
+﻿<rxui:ReactiveUserControl x:Class="AkExpenses.WPF.Windows.RegisterWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:local="clr-namespace:AkExpenses.WPF.Windows"
+                      xmlns:fa="http://schemas.fontawesome.io/icons/"
+                      xmlns:vm="clr-namespace:AkExpenses.Client.ViewModels;assembly=AkExpenses.Client"
+                      x:TypeArguments="vm:RegisterPageViewModel"
+                      xmlns:rxui="http://reactiveui.net"
+                      mc:Ignorable="d" 
+                      d:DesignHeight="700" d:DesignWidth="600">
+    <StackPanel>
+        <TextBlock Text="Welcome to AK Expenses" Style="{DynamicResource mainLabelStyle}"/>
+        <TextBlock Text="Create a new account" Style="{DynamicResource labelStyle}" FontSize="24"/>
+        
+        <TextBlock Text="Email:" Style="{DynamicResource labelStyle}"/>
+        <TextBox Margin="10 5" x:Name="txtEmail" Style="{DynamicResource textBoxStyle}"/>
+
+        <TextBlock Text="Password:" Style="{DynamicResource labelStyle}"/>
+        <TextBox Margin="10 5" x:Name="txtPassword" Style="{DynamicResource textBoxStyle}"/>
+
+        <TextBlock Text="Confirm Password:" Style="{DynamicResource labelStyle}"/>
+        <TextBox Margin="10 5" x:Name="txtConfirmPassword" Style="{DynamicResource textBoxStyle}"/>
+
+        <TextBlock  Text="First Name:" Style="{DynamicResource labelStyle}"/>
+        <TextBox Margin="10 5" x:Name="txtFirstName" Style="{DynamicResource textBoxStyle}"/>
+
+        <TextBlock Text="Last Name:" Style="{DynamicResource labelStyle}"/>
+        <TextBox Margin="10 5" x:Name="txtLastName" Style="{DynamicResource textBoxStyle}"/>
+
+        <Button x:Name="btnRegister" Template="{DynamicResource buttonTemplate}" Content="Register" Margin="30 5" Height="30"/>
+        <Button x:Name="btnLogin" Template="{DynamicResource buttonTemplate}" Content="Login" Margin="50 5" Height="30"/>
+
+        <fa:ImageAwesome HorizontalAlignment="Center" Width="40" Height="40" Foreground="Purple" Margin="30" Icon="Refresh" x:Name="progressCircle" />
+
+        <TextBlock x:Name="lblMessage" Style="{DynamicResource messageLabelStyle}"/>
+    </StackPanel>
+</rxui:ReactiveUserControl>
