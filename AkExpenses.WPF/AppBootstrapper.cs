@@ -1,11 +1,14 @@
-﻿using AkExpenses.Models.Interfaces;
+﻿using AkExpenses.Client.ViewModels;
+using AkExpenses.Models.Interfaces;
 using AkExpenses.Models.Utitlity;
 using AkExpenses.Services;
 using AKSoftware.WebApi.Client;
+using ReactiveUI;
 using Splat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,5 +36,9 @@ namespace AkExpenses.WPF
             Locator.CurrentMutable.RegisterConstant(new Auth(_serviceClient, _configuration));
         }
 
+        public void RegisterViewForViewModels()
+        {
+
+        }
     }
 }

@@ -95,13 +95,14 @@ namespace AkExpenses.Client.ViewModels
                 this.RaiseAndSetIfChanged(ref _isBusy, value);
             }
         }
+
         #endregion
 
         #region Constructions
 
         public RegisterPageViewModel(Auth authSerivce, IScreen screen = null)
         {
-            HostScreen = screen ?? Locator.Current.GetService<IScreen>(); 
+            HostScreen = screen ?? Locator.Current.GetService<IScreen>();
 
             _authService = authSerivce;
 
@@ -109,6 +110,7 @@ namespace AkExpenses.Client.ViewModels
             _isValid = this.WhenAnyValue(x => x.FirstName, x => x.LastName, x => x.Email, x => x.Password, x => x.ConfirmPassword)
                 .Select(o =>
                 {
+
                     if (string.IsNullOrWhiteSpace(o.Item1) || o.Item1.Length < 3)
                     {
                         Message = "Please enter a valid name";
@@ -127,7 +129,13 @@ namespace AkExpenses.Client.ViewModels
                         return false;
                     }
 
-                    // TODO: Validate password 
+                    if (string.IsNullOrEmpty(o.Item1) && string.IsNullOrEmpty(o.Item2) && string.IsNullOrEmpty(o.Item3) &&
+                       string.IsNullOrEmpty(o.Item4) && string.IsNullOrEmpty(o.Item5))
+                    {
+                        Message = "";
+                        return false;
+                    }
+
                     Message = "";
                     return true;
                 })
@@ -154,7 +162,7 @@ namespace AkExpenses.Client.ViewModels
         private async Task registerUserAsync()
         {
             IsBusy = true;
-            await Task.Delay(3000); 
+            await Task.Delay(3000);
             var result = await _authService.RegisterUserAsync(new Models.Shared.RegisterViewModel
             {
                 Email = Email,
@@ -166,8 +174,10 @@ namespace AkExpenses.Client.ViewModels
 
             if (result.IsSuccess)
             {
-                Message = "Welcome to AK Expenses";
+                Message = "Your account has been created successfully!";
                 // TODO: Go to the main page 
+                await Task.Delay(1500);
+                await HostScreen.Router.Navigate.Execute(new LoginViewModel(_authService));
             }
             else
                 Message = result.Message;
@@ -177,8 +187,8 @@ namespace AkExpenses.Client.ViewModels
 
         private void goToLoginPage()
         {
-            Message = "Go To Login Page";
-            // TODO: Naviage to login page
+            var auth = Locator.Current.GetService<Auth>();
+            HostScreen.Router.Navigate.Execute(new LoginViewModel(auth, HostScreen));
         }
 
         #endregion 
