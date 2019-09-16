@@ -30,7 +30,7 @@ namespace AkExpenses.WPF
         {
             InitializeComponent();
 
-            DataContext = ViewModel = new MainViewModel(new RegisterWindow());
+            DataContext = ViewModel = new MainViewModel();
 
             this.WhenActivated((d) =>
             {
@@ -38,7 +38,6 @@ namespace AkExpenses.WPF
                 this.OneWayBind(ViewModel, x => x.Router, x => x.RoutedViewHost.Router)
                     .DisposeWith(d);
 
-                this.BindCommand(ViewModel, viewmodel => viewmodel.GoRegister, view => view.btnRegister);
             });
         }
     }

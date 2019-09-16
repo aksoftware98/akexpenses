@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AkExpenses.Client.ViewModels;
+using ReactiveUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,13 +18,15 @@ using System.Windows.Shapes;
 namespace AkExpenses.WPF.Windows
 {
     /// <summary>
-    /// Interaction logic for LoginWindow.xaml
+    /// Interaction logic for DashboardWindow.xaml
     /// </summary>
-    public partial class LoginWindow : UserControl
+    public partial class DashboardWindow : ReactiveUserControl<DashboardViewModel>
     {
-        public LoginWindow()
+        public DashboardWindow()
         {
             InitializeComponent();
+
+            DataContext = ViewModel = new DashboardViewModel(); 
         }
     }
 }

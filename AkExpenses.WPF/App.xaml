@@ -9,8 +9,8 @@
             <!-- Textbox style -->
             <Style x:Key="textBoxStyle" TargetType="TextBox">
                 <Setter Property="Height" Value="30"/>
-                <Setter Property="FontSize" Value="20"/>
-                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="BorderBrush" Value="Black"/>
                 <Setter Property="Margin" Value="5"/>
                 <Setter Property="FontFamily" Value="Segoe UI Semilight"/>
@@ -18,7 +18,7 @@
 
             <!-- Label style -->
             <Style x:Key="labelStyle" TargetType="TextBlock">
-                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontSize" Value="13"/>
                 <Setter Property="Margin" Value="5"/>
                 <Setter Property="HorizontalAlignment" Value="Left"/>
                 <Setter Property="FontFamily" Value="Segoe UI Semilight"/>
