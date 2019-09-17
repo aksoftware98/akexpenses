@@ -9,17 +9,11 @@
                     mc:Ignorable="d"
                     xmlns:viewmodel="clr-namespace:AkExpenses.Client.ViewModels;assembly=AkExpenses.Client"
                     x:TypeArguments ="viewmodel:MainViewModel"
-                    Title="MainWindow" Height="600" Width="450">
-  
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        
-        
+                    Title="MainWindow" Height="700" Width="500" MinWidth="500" MinHeight="700">
+
+
+    <ScrollViewer Margin="10" HorizontalScrollBarVisibility="Hidden"  VerticalScrollBarVisibility="Auto">
         <rxui:RoutedViewHost Grid.Row="0" x:Name="RoutedViewHost" Margin="5" />
-        <Button x:Name="btnRegister" Content="Register" Grid.Row="1" Margin="5"/>
-    </Grid>
-        
+    </ScrollViewer>
+
 </rxui:ReactiveWindow>

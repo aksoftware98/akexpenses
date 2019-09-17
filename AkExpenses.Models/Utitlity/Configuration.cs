@@ -30,7 +30,7 @@ namespace AkExpenses.Models.Utitlity
 
             using (var reader = new StreamReader(_filePath))
             {
-                var settings = JsonConvert.DeserializeObject<IConfiguration>(reader.ReadToEnd());
+                var settings = JsonConvert.DeserializeObject<Configuration>(reader.ReadToEnd());
                 this.Dictionary = settings.Dictionary;
                 this.AccessToken = settings.AccessToken; 
             }

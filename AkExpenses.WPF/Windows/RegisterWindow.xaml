@@ -28,7 +28,7 @@
 
         <TextBlock Text="Last Name:" Style="{DynamicResource labelStyle}"/>
         <TextBox Margin="10 5" x:Name="txtLastName" Style="{DynamicResource textBoxStyle}"/>
-
+        
         <Button x:Name="btnRegister" Template="{DynamicResource buttonTemplate}" Content="Register" Margin="30 5" Height="30"/>
         <Button x:Name="btnLogin" Template="{DynamicResource buttonTemplate}" Content="Login" Margin="50 5" Height="30"/>
 
