@@ -66,8 +66,8 @@ namespace AkExpenses.Services
             if (result.IsSuccess)
             {
                 // Save the AccessToken
-                _configuration.SaveValue("AccessToken", result.Message);
-                _configuration.SaveValue("AccessTokenExpire", result.ExpireDate);
+                _configuration.AccessToken = result.Message;
+                _configuration.Dictionary["ExpireDate"] = result.ExpireDate;
                 return true;
             }
 
