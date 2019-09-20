@@ -1,6 +1,7 @@
 ﻿using AkExpenses.Models.Interfaces;
 using AkExpenses.Models.Shared;
 using AKSoftware.WebApi.Client;
+using Splat;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,11 +16,11 @@ namespace AkExpenses.Services
         private readonly IConfiguration _configuration;
 
         private readonly string _serviceUrl = null; 
-        public Auth(ServiceClient service, IConfiguration configuration)
+        public Auth(ServiceClient service, IConfiguration configuration = null)
         {
             _service = service;
-            this._configuration = configuration;
-            _serviceUrl = _configuration.Dictionary["ApiUri"].ToString();
+            this._configuration = configuration ?? Locator.Current.GetService<IConfiguration>();
+            _serviceUrl = _configuration.Dictionary["SemosApiUri"].ToString();
         }
 
         /// <summary>

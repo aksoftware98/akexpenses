@@ -103,7 +103,7 @@ namespace AkExpenses.Api.Controllers
                 var account = await getAccount();
 
                 // Check if there is a file 
-                var oldCategory = _db.Categories.SingleOrDefault(c => c.Name == model.Name.Trim());
+                var oldCategory = _db.Categories.SingleOrDefault(c => c.Name == model.Name.Trim() && c.AccountId == account.Id);
 
                 if (oldCategory != null)
                 {
@@ -195,12 +195,14 @@ namespace AkExpenses.Api.Controllers
                 if (string.IsNullOrWhiteSpace(model.CategoryId))
                     return NotFound();
 
+                var account = await getAccount();
+
                 var category = await _db.Categories.FindAsync(model.CategoryId);
                 if (category == null)
                     return NotFound();
 
                 var oldCategory = _db.Categories
-                    .SingleOrDefault(c => c.Name == model.Name.Trim() && c.Id != model.CategoryId);
+                    .SingleOrDefault(c => c.Name == model.Name.Trim() && c.Id != model.CategoryId && c.AccountId == account.Id);
 
                 if (oldCategory != null)
                 {

@@ -14,6 +14,7 @@ namespace AkExpenses.Models.Utitlity
         public Configuration(string filePath)
         {
             _filePath = filePath;
+            this.Dictionary = new Dictionary<string, object>();
         }
 
         public string AccessToken { get; set; }

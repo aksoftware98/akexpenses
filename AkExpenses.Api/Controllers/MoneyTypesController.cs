@@ -101,7 +101,7 @@ namespace AkExpenses.Api.Controllers
                 //Get the account
                 var account = await getAccount();
 
-                var oldType = db.MoneyTypes.SingleOrDefault(t => t.Name == model.Name.Trim());
+                var oldType = db.MoneyTypes.SingleOrDefault(t => t.Name == model.Name.Trim() && t.AccountId == account.Id);
 
                 if (oldType != null)
                 {
@@ -148,8 +148,10 @@ namespace AkExpenses.Api.Controllers
                     return NotFound();
                 }
 
+                var account = await getAccount();
+
                 var oldType = db.MoneyTypes
-                    .SingleOrDefault(t => t.Name == model.Name.Trim() && t.Id != model.MoneyTypeId);
+                    .SingleOrDefault(t => t.Name == model.Name.Trim() && t.Id != model.MoneyTypeId && t.AccountId == account.Id);
 
                 if (oldType != null)
                 {

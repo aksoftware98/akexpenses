@@ -27,13 +27,14 @@ namespace AkExpenses.WPF
             // Register Confiugration 
             var _configuration = new Configuration("settings.json");
             _configuration.SaveValue("ApiUri", "https://localhost:44391/api");
+            _configuration.SaveValue("SemosApiUri", "http://localhost:25841/api");
             Locator.CurrentMutable.RegisterConstant(_configuration, typeof(IConfiguration));
             // Register API Service 
             var _serviceClient = new ServiceClient(); 
             Locator.CurrentMutable.RegisterConstant(_serviceClient, typeof(ServiceClient));
 
             // Register Auth Service 
-            Locator.CurrentMutable.RegisterConstant(new Auth(_serviceClient, _configuration));
+            Locator.CurrentMutable.RegisterConstant(new Auth(_serviceClient, _configuration), typeof(Auth));
         }
 
         public void RegisterViewForViewModels()

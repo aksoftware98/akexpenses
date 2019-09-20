@@ -16,7 +16,6 @@ namespace AkExpenses.Client.ViewModels
     {
         private readonly Auth _authService;
 
-
         #region Properties
 
         public string UrlPathSegment => "Login";
@@ -130,8 +129,8 @@ namespace AkExpenses.Client.ViewModels
             if (result)
             {
                 Message = "Welcome...";
-                await Task.Delay(2000); 
-                await HostScreen.Router.Navigate.Execute(new DashboardViewModel()); 
+                await Task.Delay(2000);
+                await HostScreen.Router.Navigate.Execute(new CategoryViewModel(HostScreen, _configuration));
             }
             else
                 Message = "Username or password is incorrect";

@@ -89,7 +89,7 @@ namespace AkExpenses.Api.Controllers
                 //Get the account
                 var account = await getAccount();
 
-                var oldProvider = db.Providers.SingleOrDefault(p => p.Name == model.Name.Trim());
+                var oldProvider = db.Providers.SingleOrDefault(p => p.Name == model.Name.Trim() && p.AccountId == account.Id);
 
                 if (oldProvider != null)
                 {
@@ -134,8 +134,10 @@ namespace AkExpenses.Api.Controllers
                     return NotFound();
                 }
 
+                var account = await getAccount();
+
                 var oldProvider = db.Providers
-                    .SingleOrDefault(p => p.Name == model.Name.Trim() && p.Id != model.ProviderId);
+                    .SingleOrDefault(p => p.Name == model.Name.Trim() && p.Id != model.ProviderId && p.AccountId == account.Id);
 
                 if (oldProvider != null)
                 {
