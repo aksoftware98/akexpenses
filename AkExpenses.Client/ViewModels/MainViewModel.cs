@@ -27,15 +27,13 @@ namespace AkExpenses.Client.ViewModels
             Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetCallingAssembly()); 
 
             // Register the IScreen in the container 
-            Locator.CurrentMutable.RegisterLazySingleton(() => this, typeof(IScreen)); 
+            Locator.CurrentMutable.RegisterLazySingleton(() => this, typeof(IScreen));
 
-            var serviceClient = new ServiceClient();
-            var _configuration = new Configuration("settings.json");
-            _configuration.LoadSettings(); 
-            Locator.CurrentMutable.RegisterConstant(_configuration, typeof(IConfiguration));
+            var serviceClient = Locator.Current.GetService<ServiceClient>();
+            var _configuration = Locator.Current.GetService<IConfiguration>();
 
-            if (_configuration.AccessToken != null)
-                navigateTo(new DashboardViewModel());
+            if (!string.IsNullOrEmpty(_configuration.AccessToken))
+                navigateTo(new DashboardViewModel(this));
             else
                 navigateTo(new RegisterPageViewModel(new Auth(serviceClient, _configuration))); 
 

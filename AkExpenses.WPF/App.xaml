@@ -5,7 +5,7 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            
+
             <!-- Textbox style -->
             <Style x:Key="textBoxStyle" TargetType="TextBox">
                 <Setter Property="Height" Value="30"/>
@@ -45,12 +45,26 @@
                 <ControlTemplate.Triggers>
                     <Trigger Property="IsFocused" Value="True">
                         <Setter TargetName="RectBorder" Property="Visibility" Value="Visible"/>
+                        <Setter Property="Background" Value="LimeGreen"/>
+                    </Trigger>
+
+                    <Trigger Property="IsFocused" Value="False">
+                        <Setter Property="Background" Value="Chartreuse"/>
                     </Trigger>
 
                     <Trigger Property="IsPressed" Value="True">
                         <Setter TargetName="Border" Property="Opacity" Value=".4"/>
                     </Trigger>
+
+                    <Trigger Property="IsEnabled" Value="True">
+                        <Setter Property="Background" Value="Chartreuse"/>
+                    </Trigger>
+                    
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Background" Value="LightGray"/>
+                    </Trigger>
                 </ControlTemplate.Triggers>
+
             </ControlTemplate>
 
             <Style x:Key="messageLabelStyle" TargetType="TextBlock">

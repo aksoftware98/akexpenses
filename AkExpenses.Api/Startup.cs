@@ -36,7 +36,7 @@ namespace AkExpenses.Api
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")); 
+                options.UseSqlServer(Configuration.GetConnectionString("SemosConnection")); 
             });
             // Add the identity 
             services.AddIdentity<ApplicationUser, IdentityRole>()
